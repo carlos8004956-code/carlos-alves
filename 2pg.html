@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mochila Escolar</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #eef6ff;
+    }
+
+    header {
+      background: #2c3e50;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+
+    nav {
+      background: #34495e;
+      padding: 10px;
+      text-align: center;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      padding: 20px;
+    }
+
+    .materia {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      width: 250px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+
+    .materia h2 {
+      margin-top: 0;
+    }
+
+    label {
+      display: block;
+      margin: 5px 0;
+      cursor: pointer;
+    }
+
+    button {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background: #27ae60;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #219150;
+    }
+
+    footer {
+      text-align: center;
+      padding: 10px;
+      background: #2c3e50;
+      color: white;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cabeçalho -->
+  <header>
+    <h1>🎒 Meu Site Escolar</h1>
+  </header>
+
+  <!-- Menu (liga com teu site principal) -->
+  <nav>
+    <a href="index.html">Início</a>
+    <a href="mochila.html">Mochila</a>
+  </nav>
+
+  <!-- Conteúdo -->
+  <h1>Checklist da Mochila</h1>
+
+  <div class="container">
+
+    <div class="materia">
+      <h2>📘 Matemática</h2>
+      <label><input type="checkbox"> Caderno</label>
+      <label><input type="checkbox"> Livro</label>
+      <label><input type="checkbox"> Lápis</label>
+      <label><input type="checkbox"> Borracha</label>
+      <label><input type="checkbox"> Régua</label>
+    </div>
+
+    <div class="materia">
+      <h2>📗 Português</h2>
+      <label><input type="checkbox"> Caderno</label>
+      <label><input type="checkbox"> Livro</label>
+      <label><input type="checkbox"> Caneta</label>
+    </div>
+
+    <div class="materia">
+      <h2>🔬 Ciências</h2>
+      <label><input type="checkbox"> Caderno</label>
+      <label><input type="checkbox"> Livro</label>
+    </div>
+
+    <div class="materia">
+      <h2>🏛️ História</h2>
+      <label><input type="checkbox"> Caderno</label>
+      <label><input type="checkbox"> Livro</label>
+    </div>
+
+    <div class="materia">
+      <h2>🌍 Geografia</h2>
+      <label><input type="checkbox"> Caderno</label>
+      <label><input type="checkbox"> Livro</label>
+    </div>
+
+    <div class="materia">
+      <h2>🇬🇧 Inglês</h2>
+      <label><input type="checkbox"> Caderno</label>
+      <label><input type="checkbox"> Livro</label>
+    </div>
+
+  </div>
+
+  <button onclick="verificar()">Verificar Mochila</button>
+
+  <!-- Script -->
+  <script>
+    function verificar() {
+      const itens = document.querySelectorAll('input[type="checkbox"]');
+      let faltando = 0;
+
+      itens.forEach(item => {
+        if (!item.checked) {
+          faltando++;
+        }
+      });
+
+      if (faltando === 0) {
+        alert("✅ Mochila completa!");
+      } else {
+        alert("⚠️ Faltam " + faltando + " itens!");
+      }
+    }
+  </script>
+
+  <!-- Rodapé -->
+  <footer>
+    <p>© 2026 - Meu Site Escolar</p>
+  </footer>
+
+</body>
+</html>
