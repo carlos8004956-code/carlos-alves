@@ -1,183 +1,98 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mochila Escolar</title>
-
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #eef6ff;
-    }
-
-    header {
-      background: #2c3e50;
-      color: white;
-      padding: 15px;
-      text-align: center;
-    }
-
-    nav {
-      background: #34495e;
-      padding: 10px;
-      text-align: center;
-    }
-
-    nav a {
-      color: white;
-      text-decoration: none;
-      margin: 0 10px;
-      font-weight: bold;
-    }
-
-    nav a:hover {
-      text-decoration: underline;
-    }
-
-    h1 {
-      text-align: center;
-      margin-top: 20px;
-    }
-
-    .container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 15px;
-      padding: 20px;
-    }
-
-    .materia {
-      background: white;
-      padding: 15px;
-      border-radius: 10px;
-      width: 250px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
-    }
-
-    .materia h2 {
-      margin-top: 0;
-    }
-
-    label {
-      display: block;
-      margin: 5px 0;
-      cursor: pointer;
-    }
-
-    button {
-      display: block;
-      margin: 20px auto;
-      padding: 10px 20px;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      background: #27ae60;
-      color: white;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #219150;
-    }
-
-    footer {
-      text-align: center;
-      padding: 10px;
-      background: #2c3e50;
-      color: white;
-      margin-top: 20px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulado 2º Ano</title>
+<style>
+body{font-family:Arial;margin:0;background:#eef2f7}
+header{background:#2c3e50;color:#fff;padding:15px;text-align:center}
+section{background:#fff;margin:15px;padding:20px;border-radius:10px}
+button{padding:10px;border:none;border-radius:5px;background:#2c3e50;color:#fff;cursor:pointer}
+.progress{height:20px;background:#ccc;border-radius:10px;overflow:hidden}
+.progress-bar{height:100%;width:0;background:green}
+</style>
 </head>
 <body>
 
-  <!-- Cabeçalho -->
-  <header>
-    <h1>🎒 Meu Site Escolar</h1>
-  </header>
+<header>
+<h1>Simulado Interativo - 2º Ano</h1>
+<p>Pontuação: <span id="pontos">0</span></p>
+<p>Tempo: <span id="tempo">60</span>s</p>
+<div class="progress"><div class="progress-bar" id="barra"></div></div>
+</header>
 
-  <!-- Menu (liga com teu site principal) -->
-  <nav>
-    <a href="index.html">Início</a>
-    <a href="mochila.html">Mochila</a>
-  </nav>
+<section>
+<h2 id="materia"></h2>
+<p id="pergunta"></p>
+<input type="text" id="resposta">
+<br><br>
+<button onclick="responder()">Responder</button>
+<p id="feedback"></p>
+<p id="dica" style="color:orange"></p>
+</section>
 
-  <!-- Conteúdo -->
-  <h1>Checklist da Mochila</h1>
+<script>
+let perguntas = [
+{materia:"Matemática",pergunta:"Quanto é 5²?",resposta:"25",dica:"5x5"},
+{materia:"Português",pergunta:"'Ele é uma pedra' é:",resposta:"metafora",dica:"Comparação sem 'como'"},
+{materia:"Biologia",pergunta:"DNA significa?",resposta:"acido desoxirribonucleico",dica:"Começa com ácido"},
+{materia:"Química",pergunta:"H2O é:",resposta:"agua",dica:"Você bebe isso"},
+{materia:"Física",pergunta:"Unidade de força:",resposta:"newton",dica:"Nome de cientista"}
+];
 
-  <div class="container">
+let atual = 0;
+let pontos = 0;
+let tempo = 60;
 
-    <div class="materia">
-      <h2>📘 Matemática</h2>
-      <label><input type="checkbox"> Caderno</label>
-      <label><input type="checkbox"> Livro</label>
-      <label><input type="checkbox"> Lápis</label>
-      <label><input type="checkbox"> Borracha</label>
-      <label><input type="checkbox"> Régua</label>
-    </div>
+function carregar(){
+let p = perguntas[atual];
+document.getElementById('materia').innerText = p.materia;
+document.getElementById('pergunta').innerText = p.pergunta;
+document.getElementById('resposta').value = '';
+document.getElementById('feedback').innerText='';
+document.getElementById('dica').innerText='';
 
-    <div class="materia">
-      <h2>📗 Português</h2>
-      <label><input type="checkbox"> Caderno</label>
-      <label><input type="checkbox"> Livro</label>
-      <label><input type="checkbox"> Caneta</label>
-    </div>
+let progresso = (atual/perguntas.length)*100;
+document.getElementById('barra').style.width = progresso+'%';
+}
 
-    <div class="materia">
-      <h2>🔬 Ciências</h2>
-      <label><input type="checkbox"> Caderno</label>
-      <label><input type="checkbox"> Livro</label>
-    </div>
+function responder(){
+let resp = document.getElementById('resposta').value.toLowerCase();
+let correta = perguntas[atual];
 
-    <div class="materia">
-      <h2>🏛️ História</h2>
-      <label><input type="checkbox"> Caderno</label>
-      <label><input type="checkbox"> Livro</label>
-    </div>
+if(resp === correta.resposta){
+pontos++;
+document.getElementById('feedback').innerText = '✔️ Acertou!';
+}else{
+document.getElementById('feedback').innerText = '❌ Errou!';
+document.getElementById('dica').innerText = 'Dica: '+correta.dica;
+}
 
-    <div class="materia">
-      <h2>🌍 Geografia</h2>
-      <label><input type="checkbox"> Caderno</label>
-      <label><input type="checkbox"> Livro</label>
-    </div>
+document.getElementById('pontos').innerText = pontos;
 
-    <div class="materia">
-      <h2>🇬🇧 Inglês</h2>
-      <label><input type="checkbox"> Caderno</label>
-      <label><input type="checkbox"> Livro</label>
-    </div>
+atual++;
+if(atual < perguntas.length){
+setTimeout(carregar,1000);
+}else{
+alert('Fim! Pontuação: '+pontos);
+}
+}
 
-  </div>
+function cronometro(){
+setInterval(()=>{
+tempo--;
+document.getElementById('tempo').innerText = tempo;
+if(tempo<=0){alert('Tempo esgotado!');location.reload();}
+},1000);
+}
 
-  <button onclick="verificar()">Verificar Mochila</button>
+// embaralhar perguntas
+perguntas.sort(()=>Math.random()-0.5);
 
-  <!-- Script -->
-  <script>
-    function verificar() {
-      const itens = document.querySelectorAll('input[type="checkbox"]');
-      let faltando = 0;
-
-      itens.forEach(item => {
-        if (!item.checked) {
-          faltando++;
-        }
-      });
-
-      if (faltando === 0) {
-        alert("✅ Mochila completa!");
-      } else {
-        alert("⚠️ Faltam " + faltando + " itens!");
-      }
-    }
-  </script>
-
-  <!-- Rodapé -->
-  <footer>
-    <p>© 2026 - Meu Site Escolar</p>
-  </footer>
+carregar();
+cronometro();
+</script>
 
 </body>
 </html>
