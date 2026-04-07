@@ -3,11 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Simulado 2º Ano</title>
+<title>Simulado ENEM PRO</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-body{font-family:Arial;margin:0;background:#eef2f7}
+body{font-family:Arial;margin:0;background:#eef2f7;transition:0.3s}
+.dark{background:#121212;color:#fff}
 header{background:#2c3e50;color:#fff;padding:15px;text-align:center}
 section{background:#fff;margin:15px;padding:20px;border-radius:10px}
+.dark section{background:#1e1e1e}
 button{padding:10px;border:none;border-radius:5px;background:#2c3e50;color:#fff;cursor:pointer}
 .progress{height:20px;background:#ccc;border-radius:10px;overflow:hidden}
 .progress-bar{height:100%;width:0;background:green}
@@ -16,80 +19,105 @@ button{padding:10px;border:none;border-radius:5px;background:#2c3e50;color:#fff;
 <body>
 
 <header>
-<h1>Simulado Interativo - 2º Ano</h1>
-<p>Pontuação: <span id="pontos">0</span></p>
-<p>Tempo: <span id="tempo">60</span>s</p>
+<h1>Simulado ENEM PRO</h1>
+<p>Pontos: <span id="pontos">0</span></p>
+<p>Tempo: <span id="tempo">180</span>s</p>
+<button onclick="toggleDark()">🌙 Modo Escuro</button>
 <div class="progress"><div class="progress-bar" id="barra"></div></div>
 </header>
 
 <section>
 <h2 id="materia"></h2>
 <p id="pergunta"></p>
-<input type="text" id="resposta">
-<br><br>
+<div id="opcoes"></div>
 <button onclick="responder()">Responder</button>
 <p id="feedback"></p>
 <p id="dica" style="color:orange"></p>
 </section>
 
+<section>
+<h2>📊 Desempenho</h2>
+<canvas id="grafico"></canvas>
+</section>
+
+<audio id="somAcerto" src="https://www.soundjay.com/buttons/sounds/button-4.mp3"></audio>
+<audio id="somErro" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
+
 <script>
-let perguntas = [
-{materia:"Matemática",pergunta:"Quanto é 5²?",resposta:"25",dica:"5x5"},
-{materia:"Português",pergunta:"'Ele é uma pedra' é:",resposta:"metafora",dica:"Comparação sem 'como'"},
-{materia:"Biologia",pergunta:"DNA significa?",resposta:"acido desoxirribonucleico",dica:"Começa com ácido"},
-{materia:"Química",pergunta:"H2O é:",resposta:"agua",dica:"Você bebe isso"},
-{materia:"Física",pergunta:"Unidade de força:",resposta:"newton",dica:"Nome de cientista"}
+let perguntas=[
+{materia:"Matemática",pergunta:"10+5?",opcoes:["10","15","20","5"],correta:"15",dica:"Soma"},
+{materia:"Português",pergunta:"Plural de cão:",opcoes:["cãos","cães","caos","cãeses"],correta:"cães",dica:"Irregular"},
+{materia:"Biologia",pergunta:"Célula é:",opcoes:["Órgão","Sistema","Unidade da vida","Tecido"],correta:"Unidade da vida",dica:"Base"},
+{materia:"Química",pergunta:"O2 é:",opcoes:["Água","Oxigênio","Hidrogênio","Sal"],correta:"Oxigênio",dica:"Respiração"},
+{materia:"Física",pergunta:"Gravidade puxa para:",opcoes:["Cima","Lado","Centro","Baixo"],correta:"Centro",dica:"Terra"}
 ];
 
-let atual = 0;
-let pontos = 0;
-let tempo = 60;
+// gerar mais perguntas automaticamente
+for(let i=0;i<45;i++){
+perguntas.push(perguntas[Math.floor(Math.random()*5)]);
+}
+
+let atual=0,pontos=0,tempo=180,respostaSelecionada="",acertos=0,erros=0;
 
 function carregar(){
-let p = perguntas[atual];
-document.getElementById('materia').innerText = p.materia;
-document.getElementById('pergunta').innerText = p.pergunta;
-document.getElementById('resposta').value = '';
+let p=perguntas[atual];
+document.getElementById('materia').innerText=p.materia;
+document.getElementById('pergunta').innerText=p.pergunta;
+let opHTML="";
+p.opcoes.forEach(op=>{
+opHTML+=`<div><input type='radio' name='op' value='${op}' onclick='respostaSelecionada="${op}"'> ${op}</div>`;
+});
+document.getElementById('opcoes').innerHTML=opHTML;
 document.getElementById('feedback').innerText='';
 document.getElementById('dica').innerText='';
-
-let progresso = (atual/perguntas.length)*100;
-document.getElementById('barra').style.width = progresso+'%';
+let progresso=(atual/perguntas.length)*100;
+document.getElementById('barra').style.width=progresso+'%';
 }
 
 function responder(){
-let resp = document.getElementById('resposta').value.toLowerCase();
-let correta = perguntas[atual];
-
-if(resp === correta.resposta){
-pontos++;
-document.getElementById('feedback').innerText = '✔️ Acertou!';
+let correta=perguntas[atual];
+if(respostaSelecionada===correta.correta){
+pontos++;acertos++;
+document.getElementById('feedback').innerText='✔️ Acertou';
+document.getElementById('somAcerto').play();
 }else{
-document.getElementById('feedback').innerText = '❌ Errou!';
-document.getElementById('dica').innerText = 'Dica: '+correta.dica;
+erros++;
+document.getElementById('feedback').innerText='❌ Errou';
+document.getElementById('dica').innerText='Dica: '+correta.dica;
+document.getElementById('somErro').play();
 }
 
-document.getElementById('pontos').innerText = pontos;
-
+document.getElementById('pontos').innerText=pontos;
 atual++;
-if(atual < perguntas.length){
-setTimeout(carregar,1000);
+
+if(atual<perguntas.length){
+setTimeout(()=>{respostaSelecionada="";carregar();},500);
 }else{
-alert('Fim! Pontuação: '+pontos);
+mostrarGrafico();
+alert('Fim! Pontos: '+pontos);
 }
 }
 
 function cronometro(){
 setInterval(()=>{
 tempo--;
-document.getElementById('tempo').innerText = tempo;
-if(tempo<=0){alert('Tempo esgotado!');location.reload();}
+document.getElementById('tempo').innerText=tempo;
+if(tempo<=0){mostrarGrafico();alert('Tempo esgotado');location.reload();}
 },1000);
 }
 
-// embaralhar perguntas
-perguntas.sort(()=>Math.random()-0.5);
+function toggleDark(){
+document.body.classList.toggle('dark');
+}
 
+function mostrarGrafico(){
+new Chart(document.getElementById('grafico'),{
+type:'bar',
+data:{labels:['Acertos','Erros'],datasets:[{data:[acertos,erros]}]}
+});
+}
+
+perguntas.sort(()=>Math.random()-0.5);
 carregar();
 cronometro();
 </script>
