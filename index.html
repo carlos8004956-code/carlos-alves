@@ -11,6 +11,8 @@ section{background:#fff;margin:15px;padding:20px;border-radius:10px}
 button{padding:10px;border:none;border-radius:5px;background:#2c3e50;color:#fff;cursor:pointer}
 .progress{height:20px;background:#ccc;border-radius:10px;overflow:hidden}
 .progress-bar{height:100%;width:0;background:green}
+.img-box{display:flex;justify-content:center;margin-top:10px}
+.img-box img{width:220px;border-radius:10px;transition:0.3s}
 </style>
 </head>
 <body>
@@ -19,31 +21,63 @@ button{padding:10px;border:none;border-radius:5px;background:#2c3e50;color:#fff;
 <h1>Simulado Interativo - 2º Ano</h1>
 <p>Pontuação: <span id="pontos">0</span></p>
 <p>Tempo: <span id="tempo">60</span>s</p>
+<button onclick="iniciarProva()">▶️ Iniciar Prova</button>
 <div class="progress"><div class="progress-bar" id="barra"></div></div>
 </header>
 
 <section>
 <h2 id="materia"></h2>
 <p id="pergunta"></p>
-<input type="text" id="resposta">
+<input type="text" id="resposta" placeholder="Digite sua resposta">
 <br><br>
 <button onclick="responder()">Responder</button>
 <p id="feedback"></p>
 <p id="dica" style="color:orange"></p>
+
+<div class="img-box">
+<img id="imagem" src="" alt="imagem">
+</div>
 </section>
 
 <script>
+let imagens = [
+"https://i.imgur.com/8Km9tLL.jpg",
+"https://i.imgur.com/5qH6G6F.jpg",
+"https://i.imgur.com/3ZQ3Z6X.jpg",
+"https://i.imgur.com/Vb5YQ9G.jpg"],
+
+let imgAcerto = "https://i.imgur.com/4AiXzf8.jpeg"; // macaco feliz
+let imgErro = "https://i.imgur.com/ZcLLrkY.jpeg"; // macaco meme triste
+
+// imagens aleatórias continuam abaixo
+
+"https://i.imgur.com/1.jpg",
+"https://i.imgur.com/2.jpg",
+"https://i.imgur.com/3.jpg",
+"https://i.imgur.com/4.jpg"
+];
+
+let imgAcerto = "https://i.imgur.com/OK.png";
+let imgErro = "https://i.imgur.com/ERRO.png";
+
 let perguntas = [
 {materia:"Matemática",pergunta:"Quanto é 5²?",resposta:"25",dica:"5x5"},
-{materia:"Português",pergunta:"'Ele é uma pedra' é:",resposta:"metafora",dica:"Comparação sem 'como'"},
-{materia:"Biologia",pergunta:"DNA significa?",resposta:"acido desoxirribonucleico",dica:"Começa com ácido"},
-{materia:"Química",pergunta:"H2O é:",resposta:"agua",dica:"Você bebe isso"},
-{materia:"Física",pergunta:"Unidade de força:",resposta:"newton",dica:"Nome de cientista"}
+{materia:"Matemática",pergunta:"Quanto é 10 + 15?",resposta:"25",dica:"Soma"},
+{materia:"Português",pergunta:"Plural de papel:",resposta:"papeis",dica:"Termina com is"},
+{materia:"Biologia",pergunta:"Órgão que bombeia sangue:",resposta:"coracao",dica:"Fica no peito"},
+{materia:"Química",pergunta:"NaCl é:",resposta:"sal",dica:"Tem na comida"},
+{materia:"Física",pergunta:"Unidade de força:",resposta:"newton",dica:"Cientista"}
 ];
 
 let atual = 0;
 let pontos = 0;
 let tempo = 60;
+let timer;
+
+function imagemAleatoria(){
+let img = imagens[Math.floor(Math.random()*imagens.length)];
+document.getElementById('imagem').src = img;
+}
 
 function carregar(){
 let p = perguntas[atual];
@@ -53,20 +87,24 @@ document.getElementById('resposta').value = '';
 document.getElementById('feedback').innerText='';
 document.getElementById('dica').innerText='';
 
+imagemAleatoria();
+
 let progresso = (atual/perguntas.length)*100;
 document.getElementById('barra').style.width = progresso+'%';
 }
 
 function responder(){
-let resp = document.getElementById('resposta').value.toLowerCase();
+let resp = document.getElementById('resposta').value.toLowerCase().trim();
 let correta = perguntas[atual];
 
 if(resp === correta.resposta){
 pontos++;
 document.getElementById('feedback').innerText = '✔️ Acertou!';
+document.getElementById('imagem').src = imgAcerto;
 }else{
 document.getElementById('feedback').innerText = '❌ Errou!';
 document.getElementById('dica').innerText = 'Dica: '+correta.dica;
+document.getElementById('imagem').src = imgErro;
 }
 
 document.getElementById('pontos').innerText = pontos;
@@ -75,25 +113,35 @@ atual++;
 if(atual < perguntas.length){
 setTimeout(carregar,1000);
 }else{
+clearInterval(timer);
 alert('Fim! Pontuação: '+pontos);
 }
 }
 
-function cronometro(){
-setInterval(()=>{
+function iniciarProva(){
+perguntas.sort(()=>Math.random()-0.5);
+carregar();
+clearInterval(timer);
+
+timer = setInterval(()=>{
 tempo--;
 document.getElementById('tempo').innerText = tempo;
-if(tempo<=0){alert('Tempo esgotado!');location.reload();}
+if(tempo<=0){
+clearInterval(timer);
+alert('Tempo esgotado!');
+location.reload();
+}
 },1000);
 }
 
-// embaralhar perguntas
-perguntas.sort(()=>Math.random()-0.5);
+// ENTER responde
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Enter'){
+    responder();
+  }
+});
 
-carregar();
-cronometro();
 </script>
 
 </body>
-  <img src="https://s2-g1.glbimg.com/P9KY0OSc8Ik4isMSRHVnDHtZ59Y=/0x0:606x591/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2024/I/8/GkLO4AQ6qYvf6yDmn2AA/large.png" alt="Macaco-narigudo: saiba como nariz de primata influencia no sucesso  reprodutivo | G1"/>
 </html>
