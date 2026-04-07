@@ -1,108 +1,99 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Matérias - 2º Ano Ensino Médio</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background-color: #f4f4f4;
-    }
-    header {
-      background: #2c3e50;
-      color: white;
-      padding: 15px;
-      text-align: center;
-    }
-    nav {
-      background: #34495e;
-      padding: 10px;
-      text-align: center;
-    }
-    nav a {
-      color: white;
-      margin: 0 15px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    nav a:hover {
-      text-decoration: underline;
-    }
-    section {
-      padding: 20px;
-      margin: 15px;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
-    }
-    h2 {
-      color: #2c3e50;
-    }
-    footer {
-      text-align: center;
-      padding: 10px;
-      background: #2c3e50;
-      color: white;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulado 2º Ano</title>
+<style>
+body{font-family:Arial;margin:0;background:#eef2f7}
+header{background:#2c3e50;color:#fff;padding:15px;text-align:center}
+section{background:#fff;margin:15px;padding:20px;border-radius:10px}
+button{padding:10px;border:none;border-radius:5px;background:#2c3e50;color:#fff;cursor:pointer}
+.progress{height:20px;background:#ccc;border-radius:10px;overflow:hidden}
+.progress-bar{height:100%;width:0;background:green}
+</style>
 </head>
 <body>
 
 <header>
-  <h1>Matérias Importantes - 2º Ano Ensino Médio</h1>
+<h1>Simulado Interativo - 2º Ano</h1>
+<p>Pontuação: <span id="pontos">0</span></p>
+<p>Tempo: <span id="tempo">60</span>s</p>
+<div class="progress"><div class="progress-bar" id="barra"></div></div>
 </header>
 
-<nav>
-  <a href="#matematica">Matemática</a>
-  <a href="#portugues">Português</a>
-  <a href="#biologia">Biologia</a>
-  <a href="#quimica">Química</a>
-  <a href="#fisica">Física</a>
-  <a href="#historia">História</a>
-  <a href="#geografia">Geografia</a>
-</nav>
-
-<section id="matematica">
-  <h2>Matemática</h2>
-  <p>Funções (1º e 2º grau), Progressões (PA e PG), Trigonometria básica e Logaritmos.</p>
+<section>
+<h2 id="materia"></h2>
+<p id="pergunta"></p>
+<input type="text" id="resposta">
+<br><br>
+<button onclick="responder()">Responder</button>
+<p id="feedback"></p>
+<p id="dica" style="color:orange"></p>
 </section>
 
-<section id="portugues">
-  <h2>Português</h2>
-  <p>Interpretação de texto, figuras de linguagem, análise sintática e gêneros textuais.</p>
-</section>
+<script>
+let perguntas = [
+{materia:"Matemática",pergunta:"Quanto é 5²?",resposta:"25",dica:"5x5"},
+{materia:"Português",pergunta:"'Ele é uma pedra' é:",resposta:"metafora",dica:"Comparação sem 'como'"},
+{materia:"Biologia",pergunta:"DNA significa?",resposta:"acido desoxirribonucleico",dica:"Começa com ácido"},
+{materia:"Química",pergunta:"H2O é:",resposta:"agua",dica:"Você bebe isso"},
+{materia:"Física",pergunta:"Unidade de força:",resposta:"newton",dica:"Nome de cientista"}
+];
 
-<section id="biologia">
-  <h2>Biologia</h2>
-  <p>Genética, evolução, ecologia e fisiologia humana.</p>
-</section>
+let atual = 0;
+let pontos = 0;
+let tempo = 60;
 
-<section id="quimica">
-  <h2>Química</h2>
-  <p>Ligações químicas, reações químicas, soluções e estequiometria.</p>
-</section>
+function carregar(){
+let p = perguntas[atual];
+document.getElementById('materia').innerText = p.materia;
+document.getElementById('pergunta').innerText = p.pergunta;
+document.getElementById('resposta').value = '';
+document.getElementById('feedback').innerText='';
+document.getElementById('dica').innerText='';
 
-<section id="fisica">
-  <h2>Física</h2>
-  <p>Leis de Newton, trabalho e energia, termologia e óptica.</p>
-</section>
+let progresso = (atual/perguntas.length)*100;
+document.getElementById('barra').style.width = progresso+'%';
+}
 
-<section id="historia">
-  <h2>História</h2>
-  <p>Brasil Império, Revolução Industrial, Primeira Guerra Mundial e Era Vargas.</p>
-</section>
+function responder(){
+let resp = document.getElementById('resposta').value.toLowerCase();
+let correta = perguntas[atual];
 
-<section id="geografia">
-  <h2>Geografia</h2>
-  <p>Globalização, geopolítica, meio ambiente e urbanização.</p>
-</section>
+if(resp === correta.resposta){
+pontos++;
+document.getElementById('feedback').innerText = '✔️ Acertou!';
+}else{
+document.getElementById('feedback').innerText = '❌ Errou!';
+document.getElementById('dica').innerText = 'Dica: '+correta.dica;
+}
 
-<footer>
-  <p>Site educativo - 2º Ano Ensino Médio</p>
-</footer>
+document.getElementById('pontos').innerText = pontos;
+
+atual++;
+if(atual < perguntas.length){
+setTimeout(carregar,1000);
+}else{
+alert('Fim! Pontuação: '+pontos);
+}
+}
+
+function cronometro(){
+setInterval(()=>{
+tempo--;
+document.getElementById('tempo').innerText = tempo;
+if(tempo<=0){alert('Tempo esgotado!');location.reload();}
+},1000);
+}
+
+// embaralhar perguntas
+perguntas.sort(()=>Math.random()-0.5);
+
+carregar();
+cronometro();
+</script>
 
 </body>
-  <a href="2pg.html"> <button class="btn">2pg x <button/>  </a>
+   <a href="2pg.html"> <button class="btn">2pg x <button/>  </a>
 </html>
