@@ -21,6 +21,7 @@ button{padding:10px;border:none;border-radius:5px;background:#2c3e50;color:#fff;
 <p>Pontuação: <span id="pontos">0</span></p>
 <p>Tempo: <span id="tempo">120</span>s</p>
 <button id="btnStart">▶️ Iniciar Prova</button>
+<button onclick="reiniciarProva()">🔄 Reiniciar</button>
 <div class="progress"><div class="progress-bar" id="barra"></div></div>
 </header>
 
@@ -132,6 +133,10 @@ if(tempo <= 0){clearInterval(timer); mostrarDesempenho(); alert('Tempo esgotado!
 },1000);
 }
 
+function reiniciarProva(){
+  location.reload();
+}
+
 // eventos
 document.getElementById('btnStart').addEventListener('click', iniciarProva);
 document.getElementById('resposta').addEventListener('keypress', function(e){
@@ -141,5 +146,5 @@ document.getElementById('resposta').addEventListener('keypress', function(e){
 </script>
 
 </body>
-  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRZc9BHZtNDj0-kIzLJBbn5-E4fz8ik6xWrw&amp;s" alt="Para este macaco, um nariz maior significa uma vida sexual ..."/>
+  <img src="https://static.nationalgeographicbrasil.com/files/styles/image_3200/public/01-proboscis-monkey-NationalGeographic_2684060.jpg?w=1900&amp;h=1267" alt="Para este macaco, um nariz maior significa uma vida sexual ..."/>
 </html>
