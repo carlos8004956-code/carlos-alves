@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Simulado 2º Ano</title>
+<title>Simulado 2º Ano PRO</title>
 <style>
 body{font-family:Arial;margin:0;background:#eef2f7}
 header{background:#2c3e50;color:#fff;padding:15px;text-align:center}
@@ -11,136 +11,135 @@ section{background:#fff;margin:15px;padding:20px;border-radius:10px}
 button{padding:10px;border:none;border-radius:5px;background:#2c3e50;color:#fff;cursor:pointer}
 .progress{height:20px;background:#ccc;border-radius:10px;overflow:hidden}
 .progress-bar{height:100%;width:0;background:green}
-.img-box{display:flex;justify-content:center;margin-top:10px}
-.img-box img{width:220px;border-radius:10px;transition:0.3s}
+.badge{display:inline-block;padding:4px 8px;border-radius:8px;background:#ddd;margin-left:8px}
 </style>
 </head>
 <body>
 
 <header>
-<h1>Simulado Interativo - 2º Ano</h1>
+<h1>Simulado Interativo - 2º Ano PRO</h1>
 <p>Pontuação: <span id="pontos">0</span></p>
-<p>Tempo: <span id="tempo">60</span>s</p>
-<button onclick="iniciarProva()">▶️ Iniciar Prova</button>
+<p>Tempo: <span id="tempo">120</span>s</p>
+<button id="btnStart">▶️ Iniciar Prova</button>
 <div class="progress"><div class="progress-bar" id="barra"></div></div>
 </header>
 
 <section>
-<h2 id="materia"></h2>
+<h2 id="materia">Clique em iniciar</h2>
 <p id="pergunta"></p>
 <input type="text" id="resposta" placeholder="Digite sua resposta">
 <br><br>
 <button onclick="responder()">Responder</button>
 <p id="feedback"></p>
 <p id="dica" style="color:orange"></p>
+</section>
 
-<div class="img-box">
-<img id="imagem" src="" alt="imagem">
-</div>
+<section>
+<h2>📊 Desempenho por matéria</h2>
+<div id="desempenho"></div>
 </section>
 
 <script>
-let imagens = [
-"https://i.imgur.com/8Km9tLL.jpg",
-"https://i.imgur.com/5qH6G6F.jpg",
-"https://i.imgur.com/3ZQ3Z6X.jpg",
-"https://i.imgur.com/Vb5YQ9G.jpg"],
-
-let imgAcerto = "https://i.imgur.com/4AiXzf8.jpeg"; // macaco feliz
-let imgErro = "https://i.imgur.com/ZcLLrkY.jpeg"; // macaco meme triste
-
-// imagens aleatórias continuam abaixo
-
-"https://i.imgur.com/1.jpg",
-"https://i.imgur.com/2.jpg",
-"https://i.imgur.com/3.jpg",
-"https://i.imgur.com/4.jpg"
-];
-
-let imgAcerto = "https://i.imgur.com/OK.png";
-let imgErro = "https://i.imgur.com/ERRO.png";
-
 let perguntas = [
-{materia:"Matemática",pergunta:"Quanto é 5²?",resposta:"25",dica:"5x5"},
-{materia:"Matemática",pergunta:"Quanto é 10 + 15?",resposta:"25",dica:"Soma"},
-{materia:"Português",pergunta:"Plural de papel:",resposta:"papeis",dica:"Termina com is"},
-{materia:"Biologia",pergunta:"Órgão que bombeia sangue:",resposta:"coracao",dica:"Fica no peito"},
-{materia:"Química",pergunta:"NaCl é:",resposta:"sal",dica:"Tem na comida"},
-{materia:"Física",pergunta:"Unidade de força:",resposta:"newton",dica:"Cientista"}
+// Interpretação (texto grande)
+{materia:"Português", dificuldade:"médio", pergunta:"Leia: 'O avanço da tecnologia mudou a forma como as pessoas se comunicam, tornando tudo mais rápido, porém às vezes superficial.'\nPergunta: Qual é a principal ideia do texto?", resposta:"tecnologia mudou comunicacao", dica:"Fala sobre mudança"},
+
+// Matemática
+{materia:"Matemática", dificuldade:"fácil", pergunta:"Quanto é 5²?", resposta:"25", dica:"5x5"},
+{materia:"Matemática", dificuldade:"médio", pergunta:"Raiz de 16?", resposta:"4", dica:"Multiplicação"},
+{materia:"Matemática", dificuldade:"difícil", pergunta:"Quanto é 12x12?", resposta:"144", dica:"Tabuada"},
+
+// Biologia
+{materia:"Biologia", dificuldade:"fácil", pergunta:"Unidade da vida?", resposta:"celula", dica:"Muito pequena"},
+{materia:"Biologia", dificuldade:"médio", pergunta:"Função do coração?", resposta:"bombear sangue", dica:"Circulação"},
+
+// História
+{materia:"História", dificuldade:"fácil", pergunta:"Quem descobriu o Brasil?", resposta:"cabral", dica:"Pedro Álvares"},
+
+// Geografia
+{materia:"Geografia", dificuldade:"fácil", pergunta:"Capital do Brasil?", resposta:"brasilia", dica:"Começa com B"}
 ];
 
 let atual = 0;
 let pontos = 0;
-let tempo = 60;
-let timer;
-
-function imagemAleatoria(){
-let img = imagens[Math.floor(Math.random()*imagens.length)];
-document.getElementById('imagem').src = img;
-}
+let tempo = 120;
+let timer = null;
+let iniciado = false;
+let stats = {}; // acertos/total por matéria
 
 function carregar(){
 let p = perguntas[atual];
-document.getElementById('materia').innerText = p.materia;
+document.getElementById('materia').innerHTML = p.materia + " <span class='badge'>"+p.dificuldade+"</span>";
 document.getElementById('pergunta').innerText = p.pergunta;
 document.getElementById('resposta').value = '';
 document.getElementById('feedback').innerText='';
 document.getElementById('dica').innerText='';
-
-imagemAleatoria();
 
 let progresso = (atual/perguntas.length)*100;
 document.getElementById('barra').style.width = progresso+'%';
 }
 
 function responder(){
+if(!iniciado) return;
 let resp = document.getElementById('resposta').value.toLowerCase().trim();
-let correta = perguntas[atual];
+let p = perguntas[atual];
 
-if(resp === correta.resposta){
+if(!stats[p.materia]) stats[p.materia] = {acertos:0,total:0};
+stats[p.materia].total++;
+
+if(resp.includes(p.resposta)){
 pontos++;
+stats[p.materia].acertos++;
 document.getElementById('feedback').innerText = '✔️ Acertou!';
-document.getElementById('imagem').src = imgAcerto;
 }else{
 document.getElementById('feedback').innerText = '❌ Errou!';
-document.getElementById('dica').innerText = 'Dica: '+correta.dica;
-document.getElementById('imagem').src = imgErro;
+document.getElementById('dica').innerText = 'Dica: '+p.dica;
 }
 
 document.getElementById('pontos').innerText = pontos;
-
 atual++;
+
 if(atual < perguntas.length){
-setTimeout(carregar,1000);
+setTimeout(carregar,500);
 }else{
 clearInterval(timer);
+mostrarDesempenho();
 alert('Fim! Pontuação: '+pontos);
 }
 }
 
+function mostrarDesempenho(){
+let html='';
+for(let m in stats){
+let s = stats[m];
+let perc = Math.round((s.acertos/s.total)*100);
+html += `<p>${m}: ${perc}% (${s.acertos}/${s.total})</p>`;
+}
+document.getElementById('desempenho').innerHTML = html;
+}
+
 function iniciarProva(){
+if(iniciado) return;
+iniciado = true;
+atual = 0; pontos = 0; tempo = 120; stats = {};
 perguntas.sort(()=>Math.random()-0.5);
 carregar();
-clearInterval(timer);
 
 timer = setInterval(()=>{
 tempo--;
 document.getElementById('tempo').innerText = tempo;
-if(tempo<=0){
-clearInterval(timer);
-alert('Tempo esgotado!');
-location.reload();
-}
+if(tempo <= 0){clearInterval(timer); mostrarDesempenho(); alert('Tempo esgotado!');}
 },1000);
 }
 
-// ENTER responde
-document.addEventListener('keydown', function(e){
-  if(e.key === 'Enter'){
-    responder();
-  }
+// eventos
+document.getElementById('btnStart').addEventListener('click', iniciarProva);
+document.getElementById('resposta').addEventListener('keypress', function(e){
+  if(e.key === 'Enter' && iniciado){responder();}
 });
 
 </script>
-  <img src="https://s2-g1.glbimg.com/RODnvV8qNqoi333LgXgiDuKhlrM=/0x0:606x591/600x0/smart/filters:gifv():strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2024/I/8/GkLO4AQ6qYvf6yDmn2AA/large.png" alt="Macaco-narigudo: saiba como nariz de primata influencia no ..."/>
+
+</body>
+  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRZc9BHZtNDj0-kIzLJBbn5-E4fz8ik6xWrw&amp;s" alt="Para este macaco, um nariz maior significa uma vida sexual ..."/>
 </html>
