@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulado 2º Ano PRO</title>
+<style>
+body{font-family:Arial;margin:0;background:#eef2f7}
+header{background:#2c3e50;color:#fff;padding:15px;text-align:center}
+section{background:#fff;margin:15px;padding:20px;border-radius:10px}
+button{padding:10px;border:none;border-radius:5px;background:#2c3e50;color:#fff;cursor:pointer}
+.progress{height:20px;background:#ccc;border-radius:10px;overflow:hidden}
+.progress-bar{height:100%;width:0;background:green}
+.badge{display:inline-block;padding:4px 8px;border-radius:8px;background:#ddd;margin-left:8px}
+</style>
+</head>
+<body>
+
+<header>
+<h1>Simulado Interativo - 2º Ano PRO</h1>
+<p>Pontuação: <span id="pontos">0</span></p>
+<p>Tempo: <span id="tempo">120</span>s</p>
+<button id="btnStart">▶️ Iniciar Prova</button>
+<button onclick="reiniciarProva()">🔄 Reiniciar</button>
+<div class="progress"><div class="progress-bar" id="barra"></div></div>
+</header>
+
+<section>
+<h2 id="materia">Clique em iniciar</h2>
+<p id="pergunta"></p>
+<input type="text" id="resposta" placeholder="Digite sua resposta">
+<br><br>
+<button onclick="responder()">Responder</button>
+<p id="feedback"></p>
+<p id="dica" style="color:orange"></p>
+</section>
+
+<section>
+<h2>📊 Desempenho por matéria</h2>
+<div id="desempenho"></div>
+</section>
+
+<script>
+let perguntas = [
+// Interpretação (texto grande)
+{materia:"Português", dificuldade:"médio", pergunta:"Leia: 'O avanço da tecnologia mudou a forma como as pessoas se comunicam, tornando tudo mais rápido, porém às vezes superficial.'\nPergunta: Qual é a principal ideia do texto?", resposta:"tecnologia mudou comunicacao", dica:"Fala sobre mudança"},
+
+// Matemática
+{materia:"Matemática", dificuldade:"fácil", pergunta:"Quanto é 5²?", resposta:"25", dica:"5x5"},
+{materia:"Matemática", dificuldade:"médio", pergunta:"Raiz de 16?", resposta:"4", dica:"Multiplicação"},
+{materia:"Matemática", dificuldade:"difícil", pergunta:"Quanto é 12x12?", resposta:"144", dica:"Tabuada"},
+
+// Biologia
+{materia:"Biologia", dificuldade:"fácil", pergunta:"Unidade da vida?", resposta:"celula", dica:"Muito pequena"},
+{materia:"Biologia", dificuldade:"médio", pergunta:"Função do coração?", resposta:"bombear sangue", dica:"Circulação"},
+
+// História
+{materia:"História", dificuldade:"fácil", pergunta:"Quem descobriu o Brasil?", resposta:"cabral", dica:"Pedro Álvares"},
+
+// Geografia
+{materia:"Geografia", dificuldade:"fácil", pergunta:"Capital do Brasil?", resposta:"brasilia", dica:"Começa com B"}
+];
+
+let atual = 0;
+let pontos = 0;
+let tempo = 120;
+let timer = null;
+let iniciado = false;
+let stats = {}; // acertos/total por matéria
+
+function carregar(){
+let p = perguntas[atual];
+document.getElementById('materia').innerHTML = p.materia + " <span class='badge'>"+p.dificuldade+"</span>";
+document.getElementById('pergunta').innerText = p.pergunta;
+document.getElementById('resposta').value = '';
+document.getElementById('feedback').innerText='';
+document.getElementById('dica').innerText='';
+
+let progresso = (atual/perguntas.length)*100;
+document.getElementById('barra').style.width = progresso+'%';
+}
+
+function responder(){
+if(!iniciado) return;
+let resp = document.getElementById('resposta').value.toLowerCase().trim();
+let p = perguntas[atual];
+
+if(!stats[p.materia]) stats[p.materia] = {acertos:0,total:0};
+stats[p.materia].total++;
+
+if(resp.includes(p.resposta)){
+pontos++;
+stats[p.materia].acertos++;
+document.getElementById('feedback').innerText = '✔️ Acertou!';
+}else{
+document.getElementById('feedback').innerText = '❌ Errou!';
+document.getElementById('dica').innerText = 'Dica: '+p.dica;
+}
+
+document.getElementById('pontos').innerText = pontos;
+atual++;
+
+if(atual < perguntas.length){
+setTimeout(carregar,500);
+}else{
+clearInterval(timer);
+mostrarDesempenho();
+alert('Fim! Pontuação: '+pontos);
+}
+}
+
+function mostrarDesempenho(){
+let html='';
+for(let m in stats){
+let s = stats[m];
+let perc = Math.round((s.acertos/s.total)*100);
+html += `<p>${m}: ${perc}% (${s.acertos}/${s.total})</p>`;
+}
+document.getElementById('desempenho').innerHTML = html;
+}
+
+function iniciarProva(){
+if(iniciado) return;
+iniciado = true;
+atual = 0; pontos = 0; tempo = 120; stats = {};
+perguntas.sort(()=>Math.random()-0.5);
+carregar();
+
+timer = setInterval(()=>{
+tempo--;
+document.getElementById('tempo').innerText = tempo;
+if(tempo <= 0){clearInterval(timer); mostrarDesempenho(); alert('Tempo esgotado!');}
+},1000);
+}
+
+function reiniciarProva(){
+  location.reload();
+}
+
+// eventos
+document.getElementById('btnStart').addEventListener('click', iniciarProva);
+document.getElementById('resposta').addEventListener('keypress', function(e){
+  if(e.key === 'Enter' && iniciado){responder();}
+});
+
+</script>
+
+<section>
+<h2>📅 Direitos Humanos na Escola</h2>
+
+<p>Os direitos humanos dentro da escola são fundamentais para garantir um ambiente respeitoso, seguro e justo para todos. A relação entre professores, alunos e outros profissionais deve ser baseada no respeito mútuo, na escuta e na valorização das diferenças.</p>
+
+<p>Professores têm o papel de orientar e educar, mas também de ouvir e compreender seus alunos. Já os estudantes devem respeitar os educadores e colegas, contribuindo para um ambiente saudável. Outros profissionais da escola, como coordenadores e funcionários, também fazem parte desse processo, ajudando a manter a organização e o bem-estar coletivo.</p>
+
+<p>Quando os direitos humanos são respeitados na escola, o aprendizado melhora e todos se sentem mais acolhidos. Isso ajuda a formar cidadãos mais conscientes, responsáveis e preparados para viver em sociedade.</p>
+
+<h3>💬 Deixe seu comentário</h3>
+<input type="text" id="nome" placeholder="Seu nome"><br><br>
+<input type="text" id="comentario" placeholder="Escreva sua opinião">
+<button onclick="enviarComentario()">Enviar</button>
+<p id="listaComentarios"></p>
+
+<h3>🖼️ Imagem</h3>
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Students_in_classroom.jpg/640px-Students_in_classroom.jpg" alt="Alunos em sala" style="width:250px;border-radius:10px;">
+
+<br><br>
+<button onclick="voltarInicio()">⬅️ Voltar</button>
+</section>
+
+<script>
+function enviarComentario(){
+  let texto = document.getElementById('comentario').value;
+  if(texto.trim() !== ""){
+    let comentarios = JSON.parse(localStorage.getItem('comentariosDH')) || [];
+    let nome = document.getElementById('nome').value || 'Anônimo';
+let data = new Date().toLocaleString();
+comentarios.push({texto:texto, nome:nome, data:data, likes:0});
+    localStorage.setItem('comentariosDH', JSON.stringify(comentarios));
+    mostrarComentarios();
+    document.getElementById('comentario').value = "";
+  }
+}
+
+function mostrarComentarios(){
+  let lista = document.getElementById('listaComentarios');
+  let comentarios = JSON.parse(localStorage.getItem('comentariosDH')) || [];
+
+  lista.innerHTML = comentarios.map((c, i) => {
+    return `
+      <div style="margin-bottom:8px;">
+        💬 <b>${c.nome}</b> (${c.data})<br>${c.texto}
+        <br>
+        ❤️ ${c.likes || 0}
+        <button onclick="curtir(${i})">Curtir</button>
+        <button onclick="apagar(${i})">🗑️ Apagar</button>
+      </div>
+    `;
+  }).join("");
+}
+
+function curtir(index){
+  let comentarios = JSON.parse(localStorage.getItem('comentariosDH')) || [];
+  comentarios[index].likes = (comentarios[index].likes || 0) + 1;
+  localStorage.setItem('comentariosDH', JSON.stringify(comentarios));
+  mostrarComentarios();
+}
+
+function apagar(index){
+  let comentarios = JSON.parse(localStorage.getItem('comentariosDH')) || [];
+  comentarios.splice(index,1);
+  localStorage.setItem('comentariosDH', JSON.stringify(comentarios));
+  mostrarComentarios();
+}
+
+// carregar comentários ao abrir
+window.onload = mostrarComentarios;
+}
+
+function voltarInicio(){
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+</script>
+
+<script>
+function verificarDH(){
+let resp = document.getElementById('respDH').value.toLowerCase();
+let resultado = document.getElementById('resultadoDH');
+
+if(resp.includes('respeito') || resp.includes('igualdade') || resp.includes('direitos')){
+  resultado.innerText = '✔️ Boa resposta!';
+}else{
+  resultado.innerText = '💡 Pense em respeito e igualdade';
+}
+}
+</script>
+
+</body>
+</html>
