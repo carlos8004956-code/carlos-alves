@@ -42,22 +42,13 @@ button{padding:10px;border:none;border-radius:5px;background:#2c3e50;color:#fff;
 
 <script>
 let perguntas = [
-// Interpretação (texto grande)
 {materia:"Português", dificuldade:"médio", pergunta:"Leia: 'O avanço da tecnologia mudou a forma como as pessoas se comunicam, tornando tudo mais rápido, porém às vezes superficial.'\nPergunta: Qual é a principal ideia do texto?", resposta:"tecnologia mudou comunicacao", dica:"Fala sobre mudança"},
-
-// Matemática
 {materia:"Matemática", dificuldade:"fácil", pergunta:"Quanto é 5²?", resposta:"25", dica:"5x5"},
 {materia:"Matemática", dificuldade:"médio", pergunta:"Raiz de 16?", resposta:"4", dica:"Multiplicação"},
 {materia:"Matemática", dificuldade:"difícil", pergunta:"Quanto é 12x12?", resposta:"144", dica:"Tabuada"},
-
-// Biologia
 {materia:"Biologia", dificuldade:"fácil", pergunta:"Unidade da vida?", resposta:"celula", dica:"Muito pequena"},
 {materia:"Biologia", dificuldade:"médio", pergunta:"Função do coração?", resposta:"bombear sangue", dica:"Circulação"},
-
-// História
 {materia:"História", dificuldade:"fácil", pergunta:"Quem descobriu o Brasil?", resposta:"cabral", dica:"Pedro Álvares"},
-
-// Geografia
 {materia:"Geografia", dificuldade:"fácil", pergunta:"Capital do Brasil?", resposta:"brasilia", dica:"Começa com B"}
 ];
 
@@ -66,7 +57,7 @@ let pontos = 0;
 let tempo = 120;
 let timer = null;
 let iniciado = false;
-let stats = {}; // acertos/total por matéria
+let stats = {};
 
 function carregar(){
 let p = perguntas[atual];
@@ -75,7 +66,6 @@ document.getElementById('pergunta').innerText = p.pergunta;
 document.getElementById('resposta').value = '';
 document.getElementById('feedback').innerText='';
 document.getElementById('dica').innerText='';
-
 let progresso = (atual/perguntas.length)*100;
 document.getElementById('barra').style.width = progresso+'%';
 }
@@ -133,26 +123,17 @@ if(tempo <= 0){clearInterval(timer); mostrarDesempenho(); alert('Tempo esgotado!
 },1000);
 }
 
-function reiniciarProva(){
-  location.reload();
-}
+function reiniciarProva(){ location.reload(); }
 
-// eventos
 document.getElementById('btnStart').addEventListener('click', iniciarProva);
 document.getElementById('resposta').addEventListener('keypress', function(e){
   if(e.key === 'Enter' && iniciado){responder();}
 });
-
 </script>
 
 <section>
 <h2>📅 Direitos Humanos na Escola</h2>
-
-<p>Os direitos humanos dentro da escola são fundamentais para garantir um ambiente respeitoso, seguro e justo para todos. A relação entre professores, alunos e outros profissionais deve ser baseada no respeito mútuo, na escuta e na valorização das diferenças.</p>
-
-<p>Professores têm o papel de orientar e educar, mas também de ouvir e compreender seus alunos. Já os estudantes devem respeitar os educadores e colegas, contribuindo para um ambiente saudável. Outros profissionais da escola, como coordenadores e funcionários, também fazem parte desse processo, ajudando a manter a organização e o bem-estar coletivo.</p>
-
-<p>Quando os direitos humanos são respeitados na escola, o aprendizado melhora e todos se sentem mais acolhidos. Isso ajuda a formar cidadãos mais conscientes, responsáveis e preparados para viver em sociedade.</p>
+<p>Os direitos humanos dentro da escola são fundamentais para garantir um ambiente respeitoso, seguro e justo para todos.</p>
 
 <h3>💬 Deixe seu comentário</h3>
 <input type="text" id="nome" placeholder="Seu nome"><br><br>
@@ -161,7 +142,7 @@ document.getElementById('resposta').addEventListener('keypress', function(e){
 <p id="listaComentarios"></p>
 
 <h3>🖼️ Imagem</h3>
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Students_in_classroom.jpg/640px-Students_in_classroom.jpg" alt="Alunos em sala" style="width:250px;border-radius:10px;">
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Students_in_classroom.jpg/640px-Students_in_classroom.jpg" style="width:250px;border-radius:10px;">
 
 <br><br>
 <button onclick="voltarInicio()">⬅️ Voltar</button>
@@ -173,8 +154,8 @@ function enviarComentario(){
   if(texto.trim() !== ""){
     let comentarios = JSON.parse(localStorage.getItem('comentariosDH')) || [];
     let nome = document.getElementById('nome').value || 'Anônimo';
-let data = new Date().toLocaleString();
-comentarios.push({texto:texto, nome:nome, data:data, likes:0});
+    let data = new Date().toLocaleString();
+    comentarios.push({texto:texto, nome:nome, data:data, likes:0});
     localStorage.setItem('comentariosDH', JSON.stringify(comentarios));
     mostrarComentarios();
     document.getElementById('comentario').value = "";
@@ -186,6 +167,10 @@ function mostrarComentarios(){
   let comentarios = JSON.parse(localStorage.getItem('comentariosDH')) || [];
 
   lista.innerHTML = comentarios.map((c, i) => {
+    if(typeof c === 'string'){
+      c = {texto:c, nome:'Anônimo', data:'', likes:0};
+    }
+
     return `
       <div style="margin-bottom:8px;">
         💬 <b>${c.nome}</b> (${c.data})<br>${c.texto}
@@ -212,25 +197,10 @@ function apagar(index){
   mostrarComentarios();
 }
 
-// carregar comentários ao abrir
 window.onload = mostrarComentarios;
-}
 
 function voltarInicio(){
   window.scrollTo({top: 0, behavior: 'smooth'});
-}
-</script>
-
-<script>
-function verificarDH(){
-let resp = document.getElementById('respDH').value.toLowerCase();
-let resultado = document.getElementById('resultadoDH');
-
-if(resp.includes('respeito') || resp.includes('igualdade') || resp.includes('direitos')){
-  resultado.innerText = '✔️ Boa resposta!';
-}else{
-  resultado.innerText = '💡 Pense em respeito e igualdade';
-}
 }
 </script>
 
