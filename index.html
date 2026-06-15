@@ -1,150 +1,251 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Simulado 2º Ano PRO</title>
-<style>
-body{font-family:Arial;margin:0;background:#eef2f7}
-header{background:#2c3e50;color:#fff;padding:15px;text-align:center}
-section{background:#fff;margin:15px;padding:20px;border-radius:10px}
-button{padding:10px;border:none;border-radius:5px;background:#2c3e50;color:#fff;cursor:pointer}
-.progress{height:20px;background:#ccc;border-radius:10px;overflow:hidden}
-.progress-bar{height:100%;width:0;background:green}
-.badge{display:inline-block;padding:4px 8px;border-radius:8px;background:#ddd;margin-left:8px}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mochila Store</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body{
+      background:#f4f6f9;
+      color:#333;
+    }
+
+    /* MENU */
+    header{
+      background:#0d6efd;
+      color:white;
+      padding:20px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    header h1{
+      font-size:30px;
+    }
+
+    nav a{
+      color:white;
+      text-decoration:none;
+      margin-left:20px;
+      font-weight:bold;
+      transition:0.3s;
+    }
+
+    nav a:hover{
+      color:#ffd43b;
+    }
+
+    /* HERO */
+    .hero{
+      height:90vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      text-align:center;
+      background:linear-gradient(to right,#0d6efd,#4dabf7);
+      color:white;
+      padding:20px;
+    }
+
+    .hero-content h2{
+      font-size:55px;
+      margin-bottom:20px;
+    }
+
+    .hero-content p{
+      font-size:20px;
+      margin-bottom:30px;
+    }
+
+    .btn{
+      display:inline-block;
+      padding:15px 30px;
+      background:white;
+      color:#0d6efd;
+      border-radius:10px;
+      text-decoration:none;
+      font-weight:bold;
+      transition:0.3s;
+    }
+
+    .btn:hover{
+      background:#ffd43b;
+      color:#000;
+      transform:scale(1.05);
+    }
+
+    /* PRODUTOS */
+    .produtos{
+      padding:60px 20px;
+      text-align:center;
+    }
+
+    .produtos h2{
+      font-size:40px;
+      margin-bottom:40px;
+      color:#0d6efd;
+    }
+
+    .cards{
+      display:flex;
+      justify-content:center;
+      gap:30px;
+      flex-wrap:wrap;
+    }
+
+    .card{
+      background:white;
+      width:280px;
+      padding:20px;
+      border-radius:20px;
+      box-shadow:0 5px 15px rgba(0,0,0,0.1);
+      transition:0.3s;
+    }
+
+    .card:hover{
+      transform:translateY(-10px);
+    }
+
+    .mochila{
+      width:120px;
+      height:160px;
+      background:#0d6efd;
+      margin:20px auto;
+      border-radius:25px;
+      position:relative;
+    }
+
+    .mochila::before{
+      content:"";
+      position:absolute;
+      width:70px;
+      height:35px;
+      border:8px solid #003f88;
+      border-bottom:none;
+      border-radius:40px 40px 0 0;
+      top:-35px;
+      left:18px;
+    }
+
+    .mochila::after{
+      content:"";
+      position:absolute;
+      width:70px;
+      height:45px;
+      background:#4dabf7;
+      bottom:15px;
+      left:25px;
+      border-radius:10px;
+    }
+
+    .preco{
+      color:#0d6efd;
+      font-size:25px;
+      font-weight:bold;
+      margin:15px 0;
+    }
+
+    footer{
+      background:#0d6efd;
+      color:white;
+      text-align:center;
+      padding:20px;
+      margin-top:50px;
+    }
+  </style>
 </head>
+
 <body>
 
-<header>
-<h1>Simulado Interativo - 2º Ano PRO</h1>
-<p>Pontuação: <span id="pontos">0</span></p>
-<p>Tempo: <span id="tempo">120</span>s</p>
-<button id="btnStart">▶️ Iniciar Prova</button>
-<button onclick="reiniciarProva()">🔄 Reiniciar</button>
-<div class="progress"><div class="progress-bar" id="barra"></div></div>
-</header>
+  <!-- MENU -->
+  <header>
+    <h1>Mochila Store</h1>
 
-<section>
-<h2 id="materia">Clique em iniciar</h2>
-<p id="pergunta"></p>
-<input type="text" id="resposta" placeholder="Digite sua resposta">
-<br><br>
-<button onclick="responder()">Responder</button>
-<p id="feedback"></p>
-<p id="dica" style="color:orange"></p>
-</section>
+    <nav>
+      <a href="#">Início</a>
+      <a href="#">Produtos</a>
+      <a href="#">Contato</a>
+    </nav>
+  </header>
 
-<section>
-<h2>📊 Desempenho por matéria</h2>
-<div id="desempenho"></div>
-</section>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <h2>A Melhor Loja de Mochilas 🔥</h2>
 
-<script>
-let perguntas = [
-// Interpretação (texto grande)
-{materia:"Português", dificuldade:"médio", pergunta:"Leia: 'O avanço da tecnologia mudou a forma como as pessoas se comunicam, tornando tudo mais rápido, porém às vezes superficial.'\nPergunta: Qual é a principal ideia do texto?", resposta:"tecnologia mudou comunicacao", dica:"Fala sobre mudança"},
+      <p>
+        Mochilas modernas, estilosas e perfeitas
+        para escola, viagens e dia a dia.
+      </p>
 
-// Matemática
-{materia:"Matemática", dificuldade:"fácil", pergunta:"Quanto é 5²?", resposta:"25", dica:"5x5"},
-{materia:"Matemática", dificuldade:"médio", pergunta:"Raiz de 16?", resposta:"4", dica:"Multiplicação"},
-{materia:"Matemática", dificuldade:"difícil", pergunta:"Quanto é 12x12?", resposta:"144", dica:"Tabuada"},
+      <a href="#" class="btn">Comprar Agora</a>
+    </div>
+  </section>
 
-// Biologia
-{materia:"Biologia", dificuldade:"fácil", pergunta:"Unidade da vida?", resposta:"celula", dica:"Muito pequena"},
-{materia:"Biologia", dificuldade:"médio", pergunta:"Função do coração?", resposta:"bombear sangue", dica:"Circulação"},
+  <!-- PRODUTOS -->
+  <section class="produtos">
 
-// História
-{materia:"História", dificuldade:"fácil", pergunta:"Quem descobriu o Brasil?", resposta:"cabral", dica:"Pedro Álvares"},
+    <h2>Nossas Mochilas</h2>
 
-// Geografia
-{materia:"Geografia", dificuldade:"fácil", pergunta:"Capital do Brasil?", resposta:"brasilia", dica:"Começa com B"}
-];
+    <div class="cards">
 
-let atual = 0;
-let pontos = 0;
-let tempo = 120;
-let timer = null;
-let iniciado = false;
-let stats = {}; // acertos/total por matéria
+      <div class="card">
+        <div class="mochila"></div>
 
-function carregar(){
-let p = perguntas[atual];
-document.getElementById('materia').innerHTML = p.materia + " <span class='badge'>"+p.dificuldade+"</span>";
-document.getElementById('pergunta').innerText = p.pergunta;
-document.getElementById('resposta').value = '';
-document.getElementById('feedback').innerText='';
-document.getElementById('dica').innerText='';
+        <h3>Mochila Escolar</h3>
 
-let progresso = (atual/perguntas.length)*100;
-document.getElementById('barra').style.width = progresso+'%';
-}
+        <p>
+          Ideal para estudos e organização diária.
+        </p>
 
-function responder(){
-if(!iniciado) return;
-let resp = document.getElementById('resposta').value.toLowerCase().trim();
-let p = perguntas[atual];
+        <div class="preco">R$ 129,90</div>
 
-if(!stats[p.materia]) stats[p.materia] = {acertos:0,total:0};
-stats[p.materia].total++;
+        <a href="#" class="btn">Ver Produto</a>
+      </div>
 
-if(resp.includes(p.resposta)){
-pontos++;
-stats[p.materia].acertos++;
-document.getElementById('feedback').innerText = '✔️ Acertou!';
-}else{
-document.getElementById('feedback').innerText = '❌ Errou!';
-document.getElementById('dica').innerText = 'Dica: '+p.dica;
-}
+      <div class="card">
+        <div class="mochila"></div>
 
-document.getElementById('pontos').innerText = pontos;
-atual++;
+        <h3>Mochila Gamer</h3>
 
-if(atual < perguntas.length){
-setTimeout(carregar,500);
-}else{
-clearInterval(timer);
-mostrarDesempenho();
-alert('Fim! Pontuação: '+pontos);
-}
-}
+        <p>
+          Espaço perfeito para notebook e acessórios.
+        </p>
 
-function mostrarDesempenho(){
-let html='';
-for(let m in stats){
-let s = stats[m];
-let perc = Math.round((s.acertos/s.total)*100);
-html += `<p>${m}: ${perc}% (${s.acertos}/${s.total})</p>`;
-}
-document.getElementById('desempenho').innerHTML = html;
-}
+        <div class="preco">R$ 199,90</div>
 
-function iniciarProva(){
-if(iniciado) return;
-iniciado = true;
-atual = 0; pontos = 0; tempo = 120; stats = {};
-perguntas.sort(()=>Math.random()-0.5);
-carregar();
+        <a href="#" class="btn">Ver Produto</a>
+      </div>
 
-timer = setInterval(()=>{
-tempo--;
-document.getElementById('tempo').innerText = tempo;
-if(tempo <= 0){clearInterval(timer); mostrarDesempenho(); alert('Tempo esgotado!');}
-},1000);
-}
+      <div class="card">
+        <div class="mochila"></div>
 
-function reiniciarProva(){
-  location.reload();
-}
+        <h3>Mochila Viagem</h3>
 
-// eventos
-document.getElementById('btnStart').addEventListener('click', iniciarProva);
-document.getElementById('resposta').addEventListener('keypress', function(e){
-  if(e.key === 'Enter' && iniciado){responder();}
-});
+        <p>
+          Conforto e muito espaço para aventuras.
+        </p>
 
-</script>
+        <div class="preco">R$ 249,90</div>
+
+        <a href="#" class="btn">Ver Produto</a>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
+    © 2026 Mochila Store - Todos os direitos reservados
+  </footer>
 
 </body>
-  <img src="https://static.nationalgeographicbrasil.com/files/styles/image_3200/public/01-proboscis-monkey-NationalGeographic_2684060.jpg?w=1900&amp;h=1267" alt="Para este macaco, um nariz maior significa uma vida sexual ..."/>
 </html>
