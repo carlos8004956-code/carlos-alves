@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programação Web e Empreendedorismo Digital</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fb;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        header {
+            background-color: #0077cc;
+            color: white;
+            text-align: center;
+            padding: 25px;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 30px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        h2 {
+            color: #0077cc;
+            margin-top: 25px;
+        }
+
+        p {
+            line-height: 1.7;
+            text-align: justify;
+        }
+
+        .destaque {
+            background-color: #eaf4ff;
+            padding: 15px;
+            border-left: 5px solid #0077cc;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #0077cc;
+            color: white;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Programação Web, Empreendedorismo Digital e Trabalho Infantil</h1>
+    </header>
+
+    <main>
+
+        <h2>Oportunidades na Internet</h2>
+
+        <p>
+            A internet oferece diversas oportunidades para jovens aprenderem,
+            criarem projetos e até iniciarem atividades ligadas ao empreendedorismo digital.
+            Os conhecimentos estudados neste trimestre, como funcionamento da internet,
+            lógica de programação, algoritmos e organização de arquivos,
+            são a base para quem deseja atuar na área de tecnologia e programação web.
+        </p>
+
+        <h2>Aprender x Exploração</h2>
+
+        <p>
+            É importante compreender a diferença entre aprender, empreender e ser explorado.
+            Ganhar dinheiro na internet pode ser uma experiência positiva quando acontece
+            de forma equilibrada, sem prejudicar os estudos, a saúde, o descanso
+            e a convivência social.
+        </p>
+
+        <div class="destaque">
+            <strong>Atenção:</strong>
+            Quando o trabalho exige responsabilidades excessivas,
+            jornadas longas ou interfere na educação,
+            pode caracterizar exploração do trabalho infantil.
+        </div>
+
+        <h2>Importância da Formação</h2>
+
+        <p>
+            O mais importante neste momento é investir na formação,
+            desenvolver habilidades técnicas e construir conhecimento.
+            O aprendizado adquirido hoje será o principal diferencial
+            para aproveitar oportunidades futuras de forma ética,
+            segura e profissional.
+        </p>
+
+        <p>
+            O verdadeiro sucesso não está apenas em ganhar dinheiro cedo,
+            mas em construir uma carreira sólida e sustentável para o futuro.
+        </p>
+
+    </main>
+
+    <footer>
+        © 2026 - Projeto Educacional de Programação Web
+    </footer>
+
+</body>
+</html>
